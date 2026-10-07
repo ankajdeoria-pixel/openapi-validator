@@ -1,0 +1,13 @@
+rules:
+  AUTH-001: {name: openapi_version, enabled: true}
+  AUTH-002: {name: components, enabled: true}
+  AUTH-003: {name: security_schemes, enabled: true}
+  AUTH-004: {name: bearer_auth, enabled: true}
+  AUTH-005: {name: bearer_type, enabled: true}
+  AUTH-006: {name: bearer_scheme, enabled: true}
+  AUTH-007: {name: paths, enabled: true}
+  AUTH-008: {name: duplicate_yaml_keys, enabled: true}
+  AUTH-009: {name: operation_security, enabled: true}
+  AUTH-010: {name: operation_responses, enabled: true}
+  AUTH-011: {name: info, enabled: true}
+  AUTH-012: {name: servers, enabled: true}

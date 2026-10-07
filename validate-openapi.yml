@@ -1,0 +1,37 @@
+name: Validate OpenAPI
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate-openapi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required files
+        run: |
+          set -e
+          for file in requirements.txt validator.py rules.yaml openapi.yaml tests/test_validator.py; do
+            test -f "$file" || { echo "::error title=Missing required file::$file"; exit 1; }
+          done
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run validator
+        run: |
+          set +e
+          python validator.py openapi.yaml rules.yaml
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then echo '::error title=OpenAPI validation failed::See validator output above.'; exit "$code"; fi
+      - name: Run pytest
+        run: |
+          set +e
+          python -m pytest tests/test_validator.py -v --tb=short
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ]; then echo '::error title=Pytest suite failed::See pytest failure output above.'; exit "$code"; fi
